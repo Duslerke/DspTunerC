@@ -1,11 +1,10 @@
 #include <stdio.h>
-#include <portaudio.h> // the "Interface" for PortAudio
+#include <portaudio.h>
 
 int main()
 {
     PaError err;
 
-    // 1. Initialize the library
     err = Pa_Initialize();
     if (err != paNoError)
     {
@@ -15,7 +14,25 @@ int main()
 
     printf("PortAudio initialized successfully!\n");
 
-    // 2. Clean up before exiting
+    const PaDeviceIndex defaultInputIndex = Pa_GetDefaultInputDevice();
+
+    if (defaultInputIndex == paNoDevice)
+    {
+        printf("Error! No device.");
+        return 1;
+    }
+
+    const PaDeviceInfo *deviceInfo = Pa_GetDeviceInfo(defaultInputIndex);
+
+    if (deviceInfo == NULL)
+    {
+        printf("Error! Device Info Null Pointer");
+        return 1;
+    }
+
+    printf("Name: %s\n", deviceInfo->name);
+    printf("Default Sample Rate: %f\n", deviceInfo->defaultSampleRate);
+
     Pa_Terminate();
     return 0;
 }
