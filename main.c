@@ -19,6 +19,7 @@ int main()
     if (defaultInputIndex == paNoDevice)
     {
         fprintf(stderr, "Error! No device.");
+        Pa_Terminate();
         return 1;
     }
 
@@ -27,6 +28,7 @@ int main()
     if (deviceInfo == NULL)
     {
         fprintf(stderr, "Error! Device Info Null Pointer");
+        Pa_Terminate();
         return 1;
     }
 
