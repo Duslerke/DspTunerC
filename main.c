@@ -8,7 +8,7 @@ int main()
     err = Pa_Initialize();
     if (err != paNoError)
     {
-        printf("PortAudio error: %s\n", Pa_GetErrorText(err));
+        fprintf(stderr, "PortAudio error: %s\n", Pa_GetErrorText(err));
         return 1;
     }
 
@@ -18,7 +18,7 @@ int main()
 
     if (defaultInputIndex == paNoDevice)
     {
-        printf("Error! No device.");
+        fprintf(stderr, "Error! No device.");
         return 1;
     }
 
@@ -26,7 +26,7 @@ int main()
 
     if (deviceInfo == NULL)
     {
-        printf("Error! Device Info Null Pointer");
+        fprintf(stderr, "Error! Device Info Null Pointer");
         return 1;
     }
 
