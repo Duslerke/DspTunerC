@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <portaudio.h>
+#include <math.h>
 
 const double SAMPLE_RATE = 44100;
 const int FRAMES_PER_BUFFER = 256;
@@ -20,9 +21,20 @@ int captureMicInput(
         printf("Casted frames buffer is missing! Skipping chunk.\n");
         return paAbort;
     }
+
+    float amplitudeSquaresSum = 0;
+    for (unsigned long frame = 0; frame < framesPerBuffer; frame++)
+    {
+        amplitudeSquaresSum += f32Buffer[frame] * f32Buffer[frame];
+    }
+
+    // Amplitude root mean square as sound intensity scales quadratically,
+    // so RMS mean is more accurate... for continuous/longer sounds (not human speech).
+    float ampRMS = sqrt(amplitudeSquaresSum / framesPerBuffer);
+
     // The \033[K to clear everything to the right of cursor. Clears characters
     // from previous iteration that extend past curent iteration line's char length.
-    printf("1st buffer sample: %9.6f\033[K\r", f32Buffer[0]);
+    printf("1st buffer sample: %9.6f\033[K\r", ampRMS);
 
     // printf is "line-buffered" - won't print until it sees \n.
     // this force-flushes the output buffer
@@ -110,6 +122,7 @@ int main()
         return 1;
     }
 
+    printf("\n");
     printf("Closing the stream...\n");
 
     err = Pa_CloseStream(stream);
