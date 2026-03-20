@@ -14,7 +14,11 @@ int captureMicInput(
 {
     const float *f32Buffer = (const float *)paInputBuffer;
 
-    printf("First sample within the buffer %f\n", f32Buffer[0]);
+    printf("First sample within the buffer: %9.6f\r", f32Buffer[0]);
+
+    // printf is "line-buffered" - won't print until it sees \n.
+    // this force-flushes the output buffer
+    fflush(stdout);
 
     return paContinue;
 }
@@ -86,7 +90,7 @@ int main()
     }
 
     printf("Stream started! Capturing audio for 2 seconds...\n");
-    Pa_Sleep(2000);
+    Pa_Sleep(5000);
     printf("Done capturing. Stopping stream...\n");
 
     err = Pa_StopStream(stream);
