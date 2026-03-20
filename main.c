@@ -73,6 +73,42 @@ int main()
         return 1;
     }
 
+    printf("Attempting to start the stream.\n");
+
+    err = Pa_StartStream(stream);
+
+    if (err != paNoError)
+    {
+        fprintf(stderr, "Failed to start the stream.");
+        Pa_CloseStream(stream);
+        Pa_Terminate();
+        return 1;
+    }
+
+    printf("Stream started! Capturing audio for 2 seconds...\n");
+    Pa_Sleep(2000);
+    printf("Done capturing. Stopping stream...\n");
+
+    err = Pa_StopStream(stream);
+    if (err != paNoError)
+    {
+        fprintf(stderr, "Failed to stop the stream.\n");
+        Pa_CloseStream(stream);
+        Pa_Terminate();
+        return 1;
+    }
+
+    printf("Closing the stream...\n");
+
+    err = Pa_CloseStream(stream);
+    if (err != paNoError)
+    {
+        fprintf(stderr, "Failed to close the stream.\n");
+        Pa_Terminate();
+        return 1;
+    }
+
+    printf("Stream closed safely.\n");
 
     Pa_Terminate();
     return 0;
