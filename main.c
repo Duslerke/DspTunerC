@@ -14,7 +14,12 @@ int captureMicInput(
 {
     const float *f32Buffer = (const float *)paInputBuffer;
 
-    printf("First sample within the buffer: %9.6f\r", f32Buffer[0]);
+    // unplugged device, CPU spike, driver crash, etc.
+    if (f32Buffer == NULL)
+    {
+        printf("Casted frames buffer is missing! Skipping chunk.\n");
+        return paAbort;
+    }
 
     // printf is "line-buffered" - won't print until it sees \n.
     // this force-flushes the output buffer
