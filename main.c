@@ -20,6 +20,9 @@ int captureMicInput(
         printf("Casted frames buffer is missing! Skipping chunk.\n");
         return paAbort;
     }
+    // The \033[K to clear everything to the right of cursor. Clears characters
+    // from previous iteration that extend past curent iteration line's char length.
+    printf("1st buffer sample: %9.6f\033[K\r", f32Buffer[0]);
 
     // printf is "line-buffered" - won't print until it sees \n.
     // this force-flushes the output buffer
