@@ -23,9 +23,17 @@ int captureMicInput(
     }
 
     float amplitudeSquaresSum = 0;
+    float peakAmplitude = 0;
     for (unsigned long frame = 0; frame < framesPerBuffer; frame++)
     {
-        amplitudeSquaresSum += f32Buffer[frame] * f32Buffer[frame];
+        // rms doesn't care if it's abs'ed, so joining the ops for performance
+        float sample = fabsf(f32Buffer[frame]);
+        amplitudeSquaresSum += sample * sample;
+
+        if (sample > peakAmplitude)
+        {
+            peakAmplitude = sample;
+        }
     }
 
     // Amplitude root mean square as sound intensity scales quadratically,
@@ -34,7 +42,7 @@ int captureMicInput(
 
     // The \033[K to clear everything to the right of cursor. Clears characters
     // from previous iteration that extend past curent iteration line's char length.
-    printf("1st buffer sample: %9.6f\033[K\r", ampRMS);
+    printf("RMS: %9.6f, Peak: %9.6f\033[K\r", ampRMS, peakAmplitude);
 
     // printf is "line-buffered" - won't print until it sees \n.
     // this force-flushes the output buffer
